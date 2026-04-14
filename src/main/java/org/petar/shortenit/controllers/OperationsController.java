@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OperationsController {
 
-    private final MappedLinkRepository mappedLinkRepository;
     private final MappedLinkService mappedLinkService;
 
     @GetMapping("/hashed")
