@@ -19,7 +19,7 @@ public class MappedLink {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid2")
     private UUID id;
 
     @Column(name = "original")

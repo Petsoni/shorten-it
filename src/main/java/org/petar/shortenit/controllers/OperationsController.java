@@ -1,6 +1,7 @@
 package org.petar.shortenit.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.petar.shortenit.entity.dto.ShortenLinkDto;
 import org.petar.shortenit.service.MappedLinkService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,9 @@ public class OperationsController {
 
     private final MappedLinkService mappedLinkService;
 
-    @PostMapping("/hashed")
-    public ResponseEntity<String> getAllLinks(@RequestParam() String url) {
-        return ResponseEntity.ok(mappedLinkService.shortenOriginalLink(url));
+    @PostMapping("/shorten")
+    public ResponseEntity<String> getAllLinks(@RequestBody() ShortenLinkDto shortenLinkDto) {
+        return ResponseEntity.ok(mappedLinkService.shortenOriginalLink(shortenLinkDto.url()));
     }
 
     @GetMapping("/{shortened-link}")

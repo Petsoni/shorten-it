@@ -27,31 +27,16 @@ public class MappedLinkServiceImpl implements MappedLinkService {
 
     @Override
     public String shortenOriginalLink(String originalLink) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hashedLink = digest.digest(originalLink.getBytes(StandardCharsets.UTF_8));
-            StringBuilder hexString = new StringBuilder();
-
-            for (byte b : hashedLink) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hexString.length() == 1) {
-                    hexString.append("0");
-                }
-                hexString.append(hex);
-            }
-            String linkHex = hexString.substring(hexString.length() - 7, hexString.length() - 1);
-            MappedLink newMappedLink = MappedLink.builder()
-                    .originalLink(originalLink)
-                    .shortenedLink(linkHex)
-                    .active(true)
-                    .createdAt(LocalDateTime.now())
-                    .expiresAt(LocalDateTime.now().plusHours(24))
-                    .build();
-            mappedLinkRepository.save(newMappedLink);
-            return resourceUrl + "/" + linkHex;
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        String stringCode = UUID.randomUUID().toString().replace("-", "").substring(0, 7);
+        MappedLink newMappedLink = MappedLink.builder()
+                .originalLink(originalLink)
+                .shortenedLink(stringCode)
+                .active(true)
+                .createdAt(LocalDateTime.now())
+                .expiresAt(LocalDateTime.now().plusHours(24))
+                .build();
+        mappedLinkRepository.save(newMappedLink);
+        return resourceUrl + "/" + stringCode;
     }
 
     @Override
