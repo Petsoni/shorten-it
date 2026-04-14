@@ -9,4 +9,5 @@ import java.util.UUID;
 @Repository
 public interface MappedLinkRepository extends JpaRepository<MappedLink, UUID> {
 
+    MappedLink findByShortenedLink(String shortenedLink);
 }

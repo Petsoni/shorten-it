@@ -1,14 +1,20 @@
 package org.petar.shortenit.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.petar.shortenit.entity.MappedLink;
 import org.petar.shortenit.repository.MappedLinkRepository;
 import org.petar.shortenit.service.MappedLinkService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.repository.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +39,24 @@ public class MappedLinkServiceImpl implements MappedLinkService {
                 }
                 hexString.append(hex);
             }
-            return resourceUrl + "/" + hexString.substring(hexString.length() - 7, hexString.length() - 1);
+            String linkHex = hexString.substring(hexString.length() - 7, hexString.length() - 1);
+            MappedLink newMappedLink = MappedLink.builder()
+                    .originalLink(originalLink)
+                    .shortenedLink(linkHex)
+                    .active(true)
+                    .createdAt(LocalDateTime.now())
+                    .expiresAt(LocalDateTime.now().plusHours(24))
+                    .build();
+            mappedLinkRepository.save(newMappedLink);
+            return resourceUrl + "/" + linkHex;
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public RedirectView redirectToOriginalLink(String shortenedLink) {
+        MappedLink originalLink = mappedLinkRepository.findByShortenedLink(shortenedLink);
+        return new RedirectView(originalLink.getOriginalLink());
     }
 }
