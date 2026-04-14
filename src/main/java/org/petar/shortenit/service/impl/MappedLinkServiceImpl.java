@@ -3,17 +3,19 @@ package org.petar.shortenit.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.petar.shortenit.repository.MappedLinkRepository;
 import org.petar.shortenit.service.MappedLinkService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
 public class MappedLinkServiceImpl implements MappedLinkService {
+
+    @Value("${resource-url}")
+    private String resourceUrl;
 
     private final MappedLinkRepository mappedLinkRepository;
 
@@ -31,7 +33,7 @@ public class MappedLinkServiceImpl implements MappedLinkService {
                 }
                 hexString.append(hex);
             }
-            return hexString.substring(hexString.length() - 7, hexString.length() - 1);
+            return resourceUrl + "/" + hexString.substring(hexString.length() - 7, hexString.length() - 1);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
