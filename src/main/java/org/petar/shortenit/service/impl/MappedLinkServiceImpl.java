@@ -7,6 +7,7 @@ import org.petar.shortenit.exceptions.UrlNotValidException;
 import org.petar.shortenit.repository.MappedLinkRepository;
 import org.petar.shortenit.service.MappedLinkService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.RedirectView;
@@ -46,6 +47,7 @@ public class MappedLinkServiceImpl implements MappedLinkService {
         return resourceUrl + "/" + stringCode;
     }
 
+    @Cacheable(value = "linkCache", key = "#shortenedLink")
     @Override
     public RedirectView redirectToOriginalLink(String shortenedLink) {
         MappedLink originalLink = mappedLinkRepository.findByShortenedLink(shortenedLink);
