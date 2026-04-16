@@ -52,7 +52,7 @@ public class MappedLinkServiceImpl implements MappedLinkService {
         return resourceUrl + "/" + stringCode;
     }
 
-    /*Maybe make the redirect host based, not direct RedirectView object*/
+    /*TODO: Maybe make the redirect host based, not direct RedirectView object*/
     @Override
     @Cacheable(value = "linkCache", key = "#shortenedLink")
     public RedirectView redirectToOriginalLink(String shortenedLink) {
